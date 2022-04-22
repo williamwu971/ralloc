@@ -58,7 +58,8 @@ enum RegionIndex : int {
   #define HEAPFILE_PREFIX "/dev/shm/"
   #define MMAP_FLAG MAP_SHARED
 #else
-  #define HEAPFILE_PREFIX "/mnt/pmem/"
+//  #define HEAPFILE_PREFIX "/mnt/pmem/"
+  #define HEAPFILE_PREFIX "/pmem0/"
   #define MMAP_FLAG 0x80003/*MAP_SHARED_VALIDATE | MAP_SYNC*/
 #endif
 // #define DEBUG 1
