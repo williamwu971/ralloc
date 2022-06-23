@@ -59,7 +59,7 @@ void pre_fault_map(void* addr,uint64_t size,int num_thread,int* pre_fault){
         omp_set_num_threads(num_thread);
 #pragma omp parallel for schedule(static, 1)
         for (uint64_t i = 0; i < size; i += 4096) {
-            addr[i]=*pre_fault;
+            map[i]=*pre_fault;
         }
     }
 }
@@ -81,6 +81,7 @@ void RegionManager::__map_persistent_region(){
     void * addr =
         mmap(0, FILESIZE, PROT_READ | PROT_WRITE, MMAP_FLAG, fd, 0);
     assert(addr != MAP_FAILED);
+    pre_fault_map(addr,FILESIZE,20,pre_fault);
 
     base_addr = (char*) addr;
     // | curr_addr  |
@@ -116,6 +117,7 @@ void RegionManager::__remap_persistent_region(){
     void * addr =
         mmap(0, FILESIZE, PROT_READ | PROT_WRITE, MMAP_FLAG, fd, 0);
     assert(addr != MAP_FAILED);
+    pre_fault_map(addr,FILESIZE,20,pre_fault);
 
     base_addr = (char*) addr;
     curr_addr_ptr = (atomic_pptr<char>*)base_addr;
@@ -142,6 +144,7 @@ void RegionManager::__map_transient_region(){
         mmap(0, FILESIZE, PROT_READ | PROT_WRITE, 
             MAP_SHARED | MAP_NORESERVE, fd, 0);
     assert(addr != MAP_FAILED);
+    pre_fault_map(addr,FILESIZE,20,pre_fault);
 
     base_addr = (char*) addr;
     // | curr_addr  |
@@ -178,6 +181,7 @@ void RegionManager::__remap_transient_region(){
         mmap(0, FILESIZE, PROT_READ | PROT_WRITE, 
             MAP_SHARED | MAP_NORESERVE, fd, 0);
     assert(addr != MAP_FAILED);
+    pre_fault_map(addr,FILESIZE,20,pre_fault);
 
     base_addr = (char*) addr;
     curr_addr_ptr = (atomic_pptr<char>*)base_addr;
