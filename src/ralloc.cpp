@@ -31,7 +31,7 @@ namespace ralloc{
 using namespace ralloc;
 extern void public_flush_cache();
 
-int _RP_init(const char* _id, uint64_t size){
+int _RP_init(const char* _id, uint64_t size, int* pre_fault){
     string filepath;
     string id(_id);
     // thread_num = thd_num;
@@ -64,8 +64,8 @@ int _RP_init(const char* _id, uint64_t size){
 
 struct RallocHolder{
     int init_ret_val;
-    RallocHolder(const char* _id, uint64_t size){
-        init_ret_val = _RP_init(_id,size);
+    RallocHolder(const char* _id, uint64_t size, int* pre_fault){
+        init_ret_val = _RP_init(_id,size, pre_fault);
     }
     ~RallocHolder(){
         // #ifndef MEM_CONSUME_TEST
@@ -87,8 +87,8 @@ struct RallocHolder{
  * if such a heap doesn't exist, create one. aka start.
  * id is the distinguishable identity of applications.
  */
-int RP_init(const char* _id, uint64_t size){
-    static RallocHolder _holder(_id,size);
+int RP_init(const char* _id, uint64_t size, int* pre_fault){
+    static RallocHolder _holder(_id,size,pre_fault);
     return _holder.init_ret_val;
 }
 

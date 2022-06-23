@@ -30,6 +30,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/select.h>
+#include <omp.h>
 
 #include <iostream>
 // //mmap anynomous
@@ -48,6 +49,20 @@
 // 	printf("Base_addr: %p\n", base_addr);
 // 	printf("Current_addr: %p\n", curr_addr);
 // }
+
+
+void pre_fault_map(void* addr,uint64_t size,int num_thread,int* pre_fault){
+    if (pre_fault!=NULL){
+
+        char* map = (char*) addr;
+
+        omp_set_num_threads(num_thread);
+#pragma omp parallel for schedule(static, 1)
+        for (uint64_t i = 0; i < size; i += 4096) {
+            addr[i]=*pre_fault;
+        }
+    }
+}
 
 //mmap file
 void RegionManager::__map_persistent_region(){

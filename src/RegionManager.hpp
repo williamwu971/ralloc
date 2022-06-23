@@ -63,7 +63,10 @@ public:
     atomic_pptr<char>* curr_addr_ptr;//this always points to the place of base_addr
     bool persist;
 
-    RegionManager(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true):
+    int* pre_fault;
+
+    RegionManager(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true, int* pre_fault):
+        pre_fault(pre_fault),
         FILESIZE(((size/PAGESIZE)+2)*PAGESIZE), // size should align to page
         HEAPFILE(file_path),
         curr_addr_ptr(nullptr),
@@ -196,9 +199,9 @@ public:
     }
 
     /* to create desc or sb region */
-    void create(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true){
+    void create(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true, int* pre_fault){
         bool restart = exists_test(file_path);
-        RegionManager* new_mgr = new RegionManager(file_path,size,p,imm_expand);
+        RegionManager* new_mgr = new RegionManager(file_path,size,p,imm_expand,pre_fault);
         regions[cur_idx] = new_mgr;
         if(imm_expand || restart)
             regions_address[cur_idx] = (char*)new_mgr->__fetch_heap_start();
