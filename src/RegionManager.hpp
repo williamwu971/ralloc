@@ -212,9 +212,9 @@ public:
 
     /* to create metadata region, calling constructor of type T (BaseMeta) */
     template<class T>
-    T* create_for(const std::string& file_path, uint64_t size, bool p = true){
+    T* create_for(const std::string& file_path, uint64_t size, bool p = true, int* pre_fault= nullptr){
         bool restart = exists_test(file_path);
-        RegionManager* new_mgr = new RegionManager(file_path,size,p,true);
+        RegionManager* new_mgr = new RegionManager(file_path,size,p,true,pre_fault);
         regions[cur_idx] = new_mgr;
         T* t = (T*) new_mgr->__fetch_heap_start();
         if(!restart){
