@@ -12,7 +12,7 @@
 
 #ifdef __cplusplus
 /* return 1 if it's a restart, otherwise 0. */
-extern "C" int RP_init(const char* _id, uint64_t size = 5*1024*1024*1024ULL, int* pre_fault);
+extern "C" int RP_init(const char* _id, uint64_t size = 5*1024*1024*1024ULL, int* pre_fault=nullptr);
 #include "BaseMeta.hpp"
 namespace ralloc{
     extern bool initialized;
