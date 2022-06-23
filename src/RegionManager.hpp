@@ -56,6 +56,7 @@
  */
 class RegionManager{
 public:
+    int* pre_fault;
     const uint64_t FILESIZE;
     const std::string HEAPFILE;
     int FD = 0;
@@ -63,9 +64,7 @@ public:
     atomic_pptr<char>* curr_addr_ptr;//this always points to the place of base_addr
     bool persist;
 
-    int* pre_fault;
-
-    RegionManager(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true, int* pre_fault):
+    RegionManager(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true, int* pre_fault= nullptr):
         pre_fault(pre_fault),
         FILESIZE(((size/PAGESIZE)+2)*PAGESIZE), // size should align to page
         HEAPFILE(file_path),
@@ -199,7 +198,7 @@ public:
     }
 
     /* to create desc or sb region */
-    void create(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true, int* pre_fault){
+    void create(const std::string& file_path, uint64_t size, bool p = true, bool imm_expand = true, int* pre_fault= nullptr){
         bool restart = exists_test(file_path);
         RegionManager* new_mgr = new RegionManager(file_path,size,p,imm_expand,pre_fault);
         regions[cur_idx] = new_mgr;
