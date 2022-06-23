@@ -54,6 +54,8 @@
 void pre_fault_map(void* addr,uint64_t size,int num_thread,int* pre_fault){
     if (pre_fault!=NULL){
 
+        printf("faulting %p %llu\n",addr,size);
+
         char* map = (char*) addr;
 
         omp_set_num_threads(num_thread);
