@@ -54,7 +54,7 @@
 void pre_fault_map(void* addr,uint64_t size,int num_thread,int* pre_fault){
     if (pre_fault!=NULL){
 
-        printf("\n\t\t\tfaulting %p %llu\n",addr,size);
+        printf("\n\t\t\tfaulting %p %lu\n",addr,size);
 
         char* map = (char*) addr;
 
