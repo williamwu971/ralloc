@@ -58,8 +58,8 @@ void pre_fault_map(void* addr,uint64_t size,int num_thread,int* pre_fault){
 
         char* map = (char*) addr;
 
-        omp_set_num_threads(num_thread);
-#pragma omp parallel for schedule(static, 1)
+//        omp_set_num_threads(num_thread);
+//#pragma omp parallel for schedule(static, 1)
         for (uint64_t i = 0; i < size; i += 4096) {
             map[i]=*pre_fault;
         }
