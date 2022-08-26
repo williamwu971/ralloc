@@ -60,7 +60,7 @@ void pre_fault_map(void* addr,uint64_t size,int num_thread,int* pre_fault){
 
 //        omp_set_num_threads(num_thread);
 //#pragma omp parallel for schedule(static, 1)
-        for (uint64_t i = 0; i < size; i += 4096) {
+        for (uint64_t i = 0; i < size; i ++) {
             map[i]=*pre_fault;
         }
     }
@@ -143,7 +143,7 @@ void RegionManager::__map_transient_region(){
     assert(result != -1);
 
     void * addr =
-        mmap(0, FILESIZE, PROT_READ | PROT_WRITE, 
+        mmap(0, FILESIZE, PROT_READ | PROT_WRITE,
             MAP_SHARED | MAP_NORESERVE, fd, 0);
     assert(addr != MAP_FAILED);
     pre_fault_map(addr,FILESIZE,20,pre_fault);
@@ -180,7 +180,7 @@ void RegionManager::__remap_transient_region(){
     assert (offt == 0);
 
     void * addr =
-        mmap(0, FILESIZE, PROT_READ | PROT_WRITE, 
+        mmap(0, FILESIZE, PROT_READ | PROT_WRITE,
             MAP_SHARED | MAP_NORESERVE, fd, 0);
     assert(addr != MAP_FAILED);
     pre_fault_map(addr,FILESIZE,20,pre_fault);
@@ -196,15 +196,15 @@ void RegionManager::__remap_transient_region(){
 //persist the curr and base address
 void RegionManager::__close_persistent_region(){
     FLUSHFENCE;
-    FLUSH(curr_addr_ptr); 
+    FLUSH(curr_addr_ptr);
     FLUSHFENCE;
     DBG_PRINT("At the end current addr: %p\n", curr_addr_ptr->load());
 
-    unsigned long space_used = ((unsigned long) curr_addr_ptr->load() 
+    unsigned long space_used = ((unsigned long) curr_addr_ptr->load()
          - (unsigned long) base_addr);
-    unsigned long remaining_space = 
+    unsigned long remaining_space =
          ((unsigned long) FILESIZE - space_used) / (1024 * 1024);
-    DBG_PRINT("Space Used(rounded down to MiB): %ld, Remaining(MiB): %ld\n", 
+    DBG_PRINT("Space Used(rounded down to MiB): %ld, Remaining(MiB): %ld\n",
             space_used / (1024 * 1024), remaining_space);
     munmap((void*)base_addr, FILESIZE);
     close(FD);
@@ -219,11 +219,11 @@ void RegionManager::__close_transient_region(){
 
     DBG_PRINT("At the end current addr: %p\n", curr_addr);
 
-    unsigned long space_used = ((unsigned long) curr_addr 
+    unsigned long space_used = ((unsigned long) curr_addr
          - (unsigned long) base_addr);
-    unsigned long remaining_space = 
+    unsigned long remaining_space =
          ((unsigned long) FILESIZE - space_used) / (1024 * 1024);
-    DBG_PRINT("Space Used(rounded down to MiB): %ld, Remaining(MiB): %ld\n", 
+    DBG_PRINT("Space Used(rounded down to MiB): %ld, Remaining(MiB): %ld\n",
             space_used / (1024 * 1024), remaining_space);
     munmap((void*)base_addr, FILESIZE);
     close(FD);
@@ -232,7 +232,7 @@ void RegionManager::__close_transient_region(){
 //store heap root by offset from base
 void RegionManager::__store_heap_start(void* root){
     *(((intptr_t*) base_addr) + 1) = (intptr_t) root - (intptr_t) base_addr;
-    FLUSH( (((intptr_t*) base_addr) + 1)); 
+    FLUSH( (((intptr_t*) base_addr) + 1));
     FLUSHFENCE;
 }
 
@@ -249,7 +249,7 @@ int RegionManager::__nvm_region_allocator(void** memptr, size_t alignment, size_
     if (((alignment & (~alignment + 1)) != alignment) ||	//should be multiple of 2
         (alignment < sizeof(void*))) return -1; //should be at least the size of void*
     char * old_curr_addr = curr_addr_ptr->load();
-    
+
     char * new_curr_addr = old_curr_addr;
     size_t aln_adj = (size_t) new_curr_addr & (alignment - 1);
 
