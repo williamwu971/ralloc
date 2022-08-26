@@ -67,7 +67,8 @@ enum RegionIndex : int {
 /* Customizable Values */
 const uint64_t MAX_DESC_AMOUNT_BITS = 24;
 const uint64_t MIN_SB_REGION_SIZE = 1*1024*1024*1024ULL; // min sb region size
-const uint64_t SB_REGION_EXPAND_SIZE = MIN_SB_REGION_SIZE;
+//const uint64_t SB_REGION_EXPAND_SIZE = MIN_SB_REGION_SIZE;
+const uint64_t SB_REGION_EXPAND_SIZE = (2097152*2);
 const int MAX_ROOTS = 1024;
 
 /* System Macros */
@@ -88,9 +89,11 @@ const uint64_t SC_MASK = (1ULL << 6) - 1;
 // last size covered by a size class
 // allocations with size > MAX_SZ are not covered by a size class
 const int MAX_SZ = ((1 << 13) + (1 << 11) * 3);
-const uint64_t SBSIZE = (16 * PAGESIZE); // size of a superblock 64K
+//const uint64_t SBSIZE = (16 * PAGESIZE); // size of a superblock 64K
+const uint64_t SBSIZE = (2097152); // size of a superblock 64K
 const uint64_t DESCSIZE = CACHELINE_SIZE;
-const int SB_SHIFT = 16; // assume size of a superblock is 64K
+//const int SB_SHIFT = 16; // assume size of a superblock is 64K
+const int SB_SHIFT = 21; // assume size of a superblock is 64K
 const int DESC_SHIFT = 6; // assume size of a descriptor is 64B
 
 
