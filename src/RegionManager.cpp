@@ -33,7 +33,7 @@
 
 #include <omp.h>
 #include <libpmem.h>
-#include <string.h>
+//#include <string.h>
 
 #include <iostream>
 // //mmap anynomous
@@ -54,23 +54,12 @@
 // }
 
 
-void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault, int remap) {
+void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault) {
 
-
-    int *map = NULL;
     size_t mapped_len;
     int is_pmem;
+    int *map = (int *) pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
 
-    if (remap) {
-        puts("ralloc remap");
-        map = (int *) pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
-    } else {
-        puts("ralloc map");
-        map = (int *) pmem_map_file(path, len, PMEM_FILE_CREATE | PMEM_FILE_EXCL, 00666, &mapped_len, &is_pmem);
-    }
-
-
-    printf("errno %d str %s\n", errno, strerror(errno));
     assert(map != NULL);
     assert(mapped_len == len);
     assert(is_pmem == 1);
@@ -106,7 +95,7 @@ void RegionManager::__map_persistent_region() {
     void *addr =
             mmap(0, FILESIZE, PROT_READ | PROT_WRITE, MMAP_FLAG, fd, 0);
     assert(addr != MAP_FAILED);
-    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, pre_fault, 0);
+    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, pre_fault);
 
     base_addr = (char *) addr;
     // | curr_addr  |
@@ -143,7 +132,7 @@ void RegionManager::__remap_persistent_region() {
     void *addr =
             mmap(0, FILESIZE, PROT_READ | PROT_WRITE, MMAP_FLAG, fd, 0);
     assert(addr != MAP_FAILED);
-    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, pre_fault, 1);
+    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, NULL);
 
     base_addr = (char *) addr;
     curr_addr_ptr = (atomic_pptr<char> *) base_addr;
@@ -170,7 +159,7 @@ void RegionManager::__map_transient_region() {
             mmap(0, FILESIZE, PROT_READ | PROT_WRITE,
                  MAP_SHARED | MAP_NORESERVE, fd, 0);
     assert(addr != MAP_FAILED);
-    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, pre_fault, 0);
+    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, pre_fault);
 
     base_addr = (char *) addr;
     // | curr_addr  |
@@ -208,7 +197,7 @@ void RegionManager::__remap_transient_region() {
             mmap(0, FILESIZE, PROT_READ | PROT_WRITE,
                  MAP_SHARED | MAP_NORESERVE, fd, 0);
     assert(addr != MAP_FAILED);
-    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, pre_fault, 1);
+    pre_fault_map(&addr, HEAPFILE.c_str(), FILESIZE, NULL);
 
     base_addr = (char *) addr;
     curr_addr_ptr = (atomic_pptr<char> *) base_addr;
