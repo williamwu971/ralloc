@@ -323,6 +323,7 @@ void BaseMeta::fill_cache(size_t sc_idx, TCacheBin* cache) {
 }
 
 void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
+    return;
     ProcHeap* heap = &heaps[sc_idx];
     SizeClassData* sc = get_sizeclass_by_idx(sc_idx);
     uint32_t const sb_size = sc->sb_size;
