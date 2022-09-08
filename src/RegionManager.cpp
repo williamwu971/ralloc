@@ -68,6 +68,7 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
         map = (int *) pmem_map_file(path, len, PMEM_FILE_CREATE | PMEM_FILE_EXCL, 00666, &mapped_len, &is_pmem);
     }
 
+#include <string.h>
     printf("errno %d str %s\n", errno, strerror(errno));
     assert(map != NULL);
     assert(mapped_len == len);
