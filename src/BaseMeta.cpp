@@ -348,6 +348,11 @@ void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
     //  blocks with a single CAS
     while (cache->get_block_num() > 0) {
         char* head = cache->peek_block();
+
+        if (head== nullptr){
+            head=cache->_base;
+        }
+
         char* tail = head;
         Descriptor* desc = desc_lookup(head);
         char* superblock = static_cast<char*>(desc->superblock);
@@ -543,6 +548,7 @@ void BaseMeta::malloc_from_newsb(size_t sc_idx, TCacheBin* cache, size_t& block_
     char* block = superblock; // first block
     cache->push_list(block, maxcount);
     cache->_block_size=block_size;
+    cache->_base=superblock;
 
     Anchor anchor;
     anchor.avail = maxcount;
