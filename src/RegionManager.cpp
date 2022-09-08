@@ -75,7 +75,8 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
         printf("\n\t\t\tfaulting %p %lu\n", map, len);
         int value = *pre_fault;
 
-        for (uint64_t i = 0; i < len / (sizeof(int)); i++) {
+        uint64_t iter = len / (sizeof(int));
+        for (uint64_t i = 0; i < iter; i++) {
             map[i] = value;
         }
     }
