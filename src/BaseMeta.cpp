@@ -323,7 +323,7 @@ void BaseMeta::fill_cache(size_t sc_idx, TCacheBin* cache) {
 }
 
 void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
-    return;
+//    return;
     ProcHeap* heap = &heaps[sc_idx];
     SizeClassData* sc = get_sizeclass_by_idx(sc_idx);
     uint32_t const sb_size = sc->sb_size;
@@ -333,16 +333,16 @@ void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
     uint32_t const maxcount = sc->get_block_num();
     (void)maxcount; // suppress unused warning
 
-    char* tmp_ptr=cache->_block;
-    if (tmp_ptr!=nullptr && (char*)(*(pptr<char>*)tmp_ptr)== nullptr){
-        uint32_t offset=maxcount-cache->_block_num;
-        char* next;
-        for (uint32_t idx = offset; idx < maxcount - 1; ++idx) {
-            pptr<char>* block = (pptr<char>*)(tmp_ptr + (idx-offset) * block_size);
-            next = tmp_ptr + (idx-offset + 1) * block_size;
-            *block = next;
-        }
-    }
+//    char* tmp_ptr=cache->_block;
+//    if (tmp_ptr!=nullptr && (char*)(*(pptr<char>*)tmp_ptr)== nullptr){
+//        uint32_t offset=maxcount-cache->_block_num;
+//        char* next;
+//        for (uint32_t idx = offset; idx < maxcount - 1; ++idx) {
+//            pptr<char>* block = (pptr<char>*)(tmp_ptr + (idx-offset) * block_size);
+//            next = tmp_ptr + (idx-offset + 1) * block_size;
+//            *block = next;
+//        }
+//    }
 
     // @todo: optimize
     // in the normal case, we should be able to return several
@@ -534,11 +534,11 @@ void BaseMeta::malloc_from_newsb(size_t sc_idx, TCacheBin* cache, size_t& block_
     desc->superblock = superblock;
 
     // prepare block list
-//    for (uint32_t idx = 0; idx < maxcount - 1; ++idx) {
-//        pptr<char>* block = (pptr<char>*)(superblock + idx * block_size);
-//        char* next = superblock + (idx + 1) * block_size;
-//        *block = next;
-//    }
+    for (uint32_t idx = 0; idx < maxcount - 1; ++idx) {
+        pptr<char>* block = (pptr<char>*)(superblock + idx * block_size);
+        char* next = superblock + (idx + 1) * block_size;
+        *block = next;
+    }
 
     // push blocks to thread local cache
     char* block = superblock; // first block

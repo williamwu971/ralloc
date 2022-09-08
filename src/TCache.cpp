@@ -40,14 +40,14 @@ char* TCacheBin::pop_block()
 	assert(_block_num > 0);
 
 	char* ret = _block;
-//	char* next = (char*)(*(pptr<char>*)ret);
-//	_block = next;
+	char* next = (char*)(*(pptr<char>*)ret);
+	_block = next;
 
-    if ((char*)(*(pptr<char>*)ret) == nullptr){
-        *(pptr<char>*)ret=_block+_block_size;
-    }
-
-    _block = (char*)(*(pptr<char>*)ret);
+//    if ((char*)(*(pptr<char>*)ret) == nullptr){
+//        *(pptr<char>*)ret=_block+_block_size;
+//    }
+//
+//    _block = (char*)(*(pptr<char>*)ret);
 
 	_block_num--;
 	return ret;
