@@ -44,7 +44,6 @@ public:
 	char* _block;//absolute address of block
 	uint32_t _block_num;
     uint32_t _block_size;
-    char* _base;
 
 public:
 	// common, fast ops
@@ -71,7 +70,7 @@ struct TCaches
 	TCacheBin t_cache[MAX_SZ_IDX];
 	TCaches():t_cache(){};
 	~TCaches(){
-		ralloc::public_flush_cache();
+//		ralloc::public_flush_cache();
 	}
 };
 
