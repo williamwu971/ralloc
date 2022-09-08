@@ -56,6 +56,10 @@
 
 void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault) {
 
+    if (*addr_ptr != NULL) {
+        assert(munmap(*addr_ptr, len) == 0);
+    }
+
     size_t mapped_len;
     int is_pmem;
     int *map = (int *) pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
