@@ -61,9 +61,9 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
     int is_pmem;
 
     if (remap) {
-        map = pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
+        map = (int *) pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
     } else {
-        map = pmem_map_file(path, len, PMEM_FILE_CREATE | PMEM_FILE_EXCL, 00666, &mapped_len, &is_pmem);
+        map = (int *) pmem_map_file(path, len, PMEM_FILE_CREATE | PMEM_FILE_EXCL, 00666, &mapped_len, &is_pmem);
     }
 
     assert(map != NULL);
