@@ -45,7 +45,7 @@ char* TCacheBin::pop_block()
 
     if ((char*)(*(pptr<char>*)ret) == nullptr){
 //        *(pptr<char>*)ret=_block+_block_size;
-        return _block + (_block_idx++) * _block_size;
+        ret= _block + (_block_idx++) * _block_size;
     }
 
 //    _block = (char*)(*(pptr<char>*)ret);
