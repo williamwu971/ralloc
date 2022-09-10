@@ -43,6 +43,8 @@ struct TCacheBin
 public:
 	char* _block;//absolute address of block
 	uint32_t _block_num;
+
+    uint32_t _block_idx;
     uint32_t _block_size;
 
 public:
