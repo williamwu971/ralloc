@@ -43,10 +43,10 @@ char* TCacheBin::pop_block()
 //	char* next = (char*)(*(pptr<char>*)ret);
 //	_block = next;
 
-    if ((char*)(*(pptr<char>*)ret) == nullptr){
+//    if ((char*)(*(pptr<char>*)ret) == nullptr){
 //        *(pptr<char>*)ret=_block+_block_size;
         ret= _block + (_block_idx++) * _block_size;
-    }
+//    }
 
 //    _block = (char*)(*(pptr<char>*)ret);
 
