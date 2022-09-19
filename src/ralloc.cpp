@@ -48,13 +48,13 @@ int _RP_init(const char* _id, uint64_t size, int* pre_fault){
     for(int i=0; i<LAST_IDX;i++){
     switch(i){
     case DESC_IDX:
-        _rgs->create(filepath+"_desc", num_sb*DESCSIZE, true, true,pre_fault);
+        _rgs->create(filepath+"_desc", num_sb*DESCSIZE, true, true,NULL);
         break;
     case SB_IDX:
         _rgs->create(filepath+"_sb", num_sb*SBSIZE, true, false,pre_fault);
         break;
     case META_IDX:
-        base_md = _rgs->create_for<BaseMeta>(filepath+"_basemd", sizeof(BaseMeta), true,pre_fault);
+        base_md = _rgs->create_for<BaseMeta>(filepath+"_basemd", sizeof(BaseMeta), true,NULL);
         break;
     } // switch
     }
