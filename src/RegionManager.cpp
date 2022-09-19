@@ -82,6 +82,8 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
     } else {
         map = (int *) mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         assert(map != MAP_FAILED);
+
+        printf("\n\t\t\tDRAM faulting %p %lu\n", map, len);
         memset(map, 0, len);
     }
 
