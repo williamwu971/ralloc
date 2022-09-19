@@ -33,6 +33,7 @@
 
 #include <omp.h>
 #include <libpmem.h>
+#include <cstring>
 //#include <string.h>
 
 #include <iostream>
