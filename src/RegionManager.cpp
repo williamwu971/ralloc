@@ -76,10 +76,11 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
         printf("\n\t\t\tfaulting %p %lu\n", map, len);
         int value = *pre_fault;
 
-        uint64_t iter = len / (sizeof(int));
-        for (uint64_t i = 0; i < iter; i++) {
-            map[i] = value;
-        }
+//        uint64_t iter = len / (sizeof(int));
+//        for (uint64_t i = 0; i < iter; i++) {
+//            map[i] = value;
+//        }
+        memset(map, value, len);
     } else {
         map = (int *) mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         assert(map != MAP_FAILED);
