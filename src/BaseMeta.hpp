@@ -137,6 +137,7 @@ inline bool operator==(const CrossPtr<T,idx>& lhs, const CrossPtr<T,idx>& rhs){
 
 template <class T, RegionIndex idx>
 inline bool operator!=(const CrossPtr<T,idx>& lhs, const std::nullptr_t& rhs){
+    (void)rhs;
     return !lhs.is_null();
 }
 
