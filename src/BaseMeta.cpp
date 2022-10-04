@@ -542,7 +542,7 @@ void BaseMeta::malloc_from_newsb(size_t sc_idx, TCacheBin* cache, size_t& block_
 
     // push blocks to thread local cache
     char* block = superblock; // first block
-    cache->push_list(block, maxcount);
+    cache->push_list(block, maxcount-1); // todo remove -1
     cache->_block_size=block_size;
     cache->_block_idx=0;
 
