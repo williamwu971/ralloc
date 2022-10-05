@@ -334,7 +334,7 @@ void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
     (void)maxcount; // suppress unused warning
 
     char* tmp_ptr=cache->_block;
-    if (tmp_ptr!=nullptr && (char*)(*(pptr<char>*)tmp_ptr)== nullptr){
+    if (tmp_ptr!=nullptr ){
         uint32_t offset=cache->_block_idx;
         char* next;
         for (uint32_t idx = offset; idx < maxcount - 1; ++idx) {
