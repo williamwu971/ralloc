@@ -333,16 +333,16 @@ void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
     uint32_t const maxcount = sc->get_block_num();
     (void)maxcount; // suppress unused warning
 
-//    char* tmp_ptr=cache->_block;
-//    if (tmp_ptr!=nullptr && (char*)(*(pptr<char>*)tmp_ptr)== nullptr){
-//        uint32_t offset=maxcount-cache->_block_num;
-//        char* next;
-//        for (uint32_t idx = offset; idx < maxcount - 1; ++idx) {
-//            pptr<char>* block = (pptr<char>*)(tmp_ptr + (idx-offset) * block_size);
-//            next = tmp_ptr + (idx-offset + 1) * block_size;
-//            *block = next;
-//        }
-//    }
+    char* tmp_ptr=cache->_block;
+    if (tmp_ptr!=nullptr && (char*)(*(pptr<char>*)tmp_ptr)== nullptr){
+        uint32_t offset=cache->_block_idx;
+        char* next;
+        for (uint32_t idx = offset; idx < maxcount - 1; ++idx) {
+            pptr<char>* block = (pptr<char>*)(tmp_ptr + (idx-offset) * block_size);
+            next = tmp_ptr + (idx-offset + 1) * block_size;
+            *block = next;
+        }
+    }
 
     // @todo: optimize
     // in the normal case, we should be able to return several
