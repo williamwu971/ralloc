@@ -41,7 +41,7 @@ char* TCacheBin::pop_block()
 
     char* ret = _block;
 
-    if ((char*)(*(pptr<char>*)ret)==NULL){
+    if ((char*)(*(pptr<char>*)ret)==NULL && _block_idx<_maxcount-1){
         *(pptr<char>*)ret = _superblock + (_block_idx++ + 1) * _block_size;
     }
 

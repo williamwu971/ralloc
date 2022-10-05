@@ -46,6 +46,7 @@ public:
 
     uint32_t _block_idx;
     uint32_t _block_size;
+    uint32_t _maxcount;
     char* _superblock;
 
 public:

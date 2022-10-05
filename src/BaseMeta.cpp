@@ -546,6 +546,7 @@ void BaseMeta::malloc_from_newsb(size_t sc_idx, TCacheBin* cache, size_t& block_
     cache->_block_size=block_size;
     cache->_block_idx=0;
     cache->_superblock=superblock;
+    cache->_maxcount=maxcount;
 
     Anchor anchor;
     anchor.avail = maxcount;
