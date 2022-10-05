@@ -46,6 +46,7 @@ public:
 
     uint32_t _block_idx;
     uint32_t _block_size;
+    char* _superblock;
 
 public:
 	// common, fast ops

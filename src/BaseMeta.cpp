@@ -323,7 +323,7 @@ void BaseMeta::fill_cache(size_t sc_idx, TCacheBin* cache) {
 }
 
 void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
-    return;
+//    return;
     ProcHeap* heap = &heaps[sc_idx];
     SizeClassData* sc = get_sizeclass_by_idx(sc_idx);
     uint32_t const sb_size = sc->sb_size;
@@ -542,9 +542,10 @@ void BaseMeta::malloc_from_newsb(size_t sc_idx, TCacheBin* cache, size_t& block_
 
     // push blocks to thread local cache
     char* block = superblock; // first block
-    cache->push_list(block, maxcount-1); // todo remove -1
+    cache->push_list(block, maxcount);
     cache->_block_size=block_size;
     cache->_block_idx=0;
+    cache->_superblock=superblock;
 
     Anchor anchor;
     anchor.avail = maxcount;

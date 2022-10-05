@@ -36,22 +36,20 @@ void TCacheBin::push_list(char* block, uint32_t length)
 
 char* TCacheBin::pop_block()
 {
-	// caller must ensure there's an available block
-	assert(_block_num > 0);
+    // caller must ensure there's an available block
+    assert(_block_num > 0);
 
-	char* ret = _block;
-//	char* next = (char*)(*(pptr<char>*)ret);
-//	_block = next;
+    char* ret = _block;
 
-    if ((char*)(*(pptr<char>*)ret) == nullptr){
-//        *(pptr<char>*)ret=_block+_block_size;
-        ret= _block + (_block_idx++) * _block_size;
+    if ((char*)(*(pptr<char>*)ret)==NULL){
+        *(pptr<char>*)ret = _superblock + (_block_idx++ + 1) * _block_size;
     }
 
-//    _block = (char*)(*(pptr<char>*)ret);
+    char* next = (char*)(*(pptr<char>*)ret);
 
-	_block_num--;
-	return ret;
+    _block = next;
+    _block_num--;
+    return ret;
 }
 
 void TCacheBin::pop_list(char* block, uint32_t length)
