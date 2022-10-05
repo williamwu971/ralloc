@@ -334,12 +334,10 @@ void BaseMeta::flush_cache(size_t sc_idx, TCacheBin* cache) {
     (void)maxcount; // suppress unused warning
 
     char* tmp_ptr=cache->_block;
-    if (tmp_ptr!=nullptr ){
-        uint32_t offset=cache->_block_idx;
-        char* next;
-        for (uint32_t idx = offset; idx < maxcount - 1; ++idx) {
-            pptr<char>* block = (pptr<char>*)(tmp_ptr + (idx-offset) * block_size);
-            next = tmp_ptr + (idx-offset + 1) * block_size;
+    if (tmp_ptr!=nullptr){
+        for (uint32_t idx = cache->_block_idx; idx < maxcount - 1; ++idx) {
+            pptr<char>* block = (pptr<char>*)(cache->_superblock + idx * block_size);
+            char* next = cache->_superblock + (idx + 1) * block_size;
             *block = next;
         }
     }
