@@ -61,32 +61,20 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
         assert(munmap(*addr_ptr, len) == 0);
     }
 
-    int *map = NULL;
+    size_t mapped_len;
+    int is_pmem;
+
+    void *map = pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
+
+    assert(map != NULL);
+    assert(mapped_len == len);
+    assert(is_pmem == 1);
 
     if (pre_fault != NULL) {
-
-        size_t mapped_len;
-        int is_pmem;
-        map = (int *) pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
-
-        assert(map != NULL);
-        assert(mapped_len == len);
-        assert(is_pmem == 1);
-
         printf("\n\t\t\tfaulting %p %lu\n", map, len);
         int value = *pre_fault;
 
-//        uint64_t iter = len / (sizeof(int));
-//        for (uint64_t i = 0; i < iter; i++) {
-//            map[i] = value;
-//        }
         memset(map, value, len);
-    } else {
-        map = (int *) mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-        assert(map != MAP_FAILED);
-
-        printf("\n\t\t\tDRAM faulting %p %lu\n", map, len);
-        memset(map, 0, len);
     }
 
     *addr_ptr = (void *) map;
