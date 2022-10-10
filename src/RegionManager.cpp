@@ -65,18 +65,21 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
     int is_pmem;
 
     void *map = pmem_map_file(path, 0, 0, 0, &mapped_len, &is_pmem);
-    printf("\n\t\t\tfaulting %p %lu\n", map, len);
 
     assert(map != NULL);
     assert(mapped_len == len);
     assert(is_pmem == 1);
 
-    if (pre_fault != NULL) {
+    printf("\n\t\t\t address: %p %lugb", map, len / 1024 / 1024 / 1024);
 
+    if (pre_fault != NULL) {
+        printf(" faulting %lu", len);
         int value = *pre_fault;
 
         memset(map, value, len);
     }
+
+    printf("\n");
 
     *addr_ptr = (void *) map;
 }
