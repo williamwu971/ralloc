@@ -73,7 +73,7 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
     printf("\n\t\t\t address: %p %lugb", map, len / 1024 / 1024 / 1024);
 
     if (pre_fault != NULL) {
-        printf(" faulting %lu", len);
+        printf(" faulting...");
         int value = *pre_fault;
 
         memset(map, value, len);
