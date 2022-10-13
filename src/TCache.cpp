@@ -40,16 +40,12 @@ char* TCacheBin::pop_block()
     assert(_block_num > 0);
 
     char* ret = _block;
-    char* next;
 
     if ((char*)(*(pptr<char>*)ret)==NULL && _block_idx<_maxcount-1){
-//        *(pptr<char>*)ret = _superblock + (_block_idx++ + 1) * _block_size;
-        next = _superblock + (_block_idx++ + 1) * _block_size;
-    }else{
-        next= (char*)(*(pptr<char>*)ret);
+        *(pptr<char>*)ret = _superblock + (_block_idx++ + 1) * _block_size;
     }
 
-
+    char* next = (char*)(*(pptr<char>*)ret);
 
     _block = next;
     _block_num--;
