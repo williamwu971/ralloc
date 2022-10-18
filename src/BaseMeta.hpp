@@ -316,8 +316,11 @@ public:
     inline void mark_func(T* ptr){
         void* addr = reinterpret_cast<void*>(ptr);
         // Step 1: check if it's a valid pptr
-        if(UNLIKELY(!ralloc::_rgs->in_range(SB_IDX, addr))) 
-            return; // return if not in range
+        if(UNLIKELY(!ralloc::_rgs->in_range(SB_IDX, addr))) {
+            printf(" ### not in range ###\n");
+            throw; // return if not in range
+        }
+
         auto res = marked_blk.find(reinterpret_cast<char*>(addr));
         if(res == marked_blk.end()){
             // Step 2: mark potential pptr
