@@ -426,13 +426,13 @@ public:
     bool restart_xiaoxiang(void** pointers,int pointers_count){
         // Restart, setting values and flags to normal
         // Should be called during restart
-        bool ret = is_dirty();
-        if(ret) {
+//        bool ret = is_dirty();
+//        if(ret) {
             GarbageCollection gc;
             gc.pointers_xiaoxiang=pointers;
             gc.pointers_count_xiaoxiang=pointers_count;
             gc();
-        }
+//        }
         FLUSHFENCE;
         // here restart is done, and "dirty" should be set to true until
         // writeback() is called so that crash will result in a true dirty.
