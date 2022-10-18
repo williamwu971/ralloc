@@ -426,7 +426,7 @@ public:
     bool restart_xiaoxiang(void** pointers,int pointers_count){
         // Restart, setting values and flags to normal
         // Should be called during restart
-//        bool ret = is_dirty();
+        bool ret = is_dirty();
 //        if(ret) {
             GarbageCollection gc;
             gc.pointers_xiaoxiang=pointers;
