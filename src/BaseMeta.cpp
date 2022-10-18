@@ -773,7 +773,14 @@ void GarbageCollection::operator() () {
         }
     }
 
-    printf("xiaoxiang: check %p %d\n",pointers_xiaoxiang,pointers_count_xiaoxiang);
+    if (pointers_xiaoxiang!=NULL && pointers_count_xiaoxiang>0){
+//        printf("\nxiaoxiang: check %p %d\n",pointers_xiaoxiang,pointers_count_xiaoxiang);
+        printf("xiaoxiang inserting pointers...");
+        for (int xx=0;xx<pointers_count_xiaoxiang;xx++){
+            mark_func(pointers_xiaoxiang[xx]);
+        }
+    }
+
 
     while(!to_filter_node.empty()) {
         // pop nodes from the stack and call filter function of each node
