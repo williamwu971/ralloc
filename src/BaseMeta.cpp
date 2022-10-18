@@ -753,7 +753,7 @@ void ralloc::public_flush_cache(){
  */
 void GarbageCollection::operator() () {
     printf("Start garbage collection...\n");
-    auto start = high_resolution_clock::now(); 
+//    auto start = high_resolution_clock::now();
     // Step 0: initialize all transient data
     printf("Initializing all transient data...");
     base_md->avail_sb.off.store(nullptr); // initialize avail_sb
@@ -791,6 +791,7 @@ void GarbageCollection::operator() () {
         func(node,*this);
     }
     printf("Done!\nReachable blocks = %lu\n", marked_blk.size());
+    auto start = high_resolution_clock::now();
 
     // Step 2: sweep phase, update variables.
     printf("Reconstructing metadata...");
