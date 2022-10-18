@@ -317,8 +317,9 @@ public:
         void* addr = reinterpret_cast<void*>(ptr);
         // Step 1: check if it's a valid pptr
         if(UNLIKELY(!ralloc::_rgs->in_range(SB_IDX, addr))) {
-            printf(" ### %p not in range ###\n",addr);
-            throw; // return if not in range
+//            printf(" ### %p not in range ###\n",addr);
+//            throw; // return if not in range
+            return;
         }
 
         auto res = marked_blk.find(reinterpret_cast<char*>(addr));
