@@ -772,6 +772,9 @@ void GarbageCollection::operator() () {
             ralloc::roots_filter_func[i](base_md->roots[i], *this);
         }
     }
+
+    printf("xiaoxiang: check %p %d\n",pointers_xiaoxiang,pointers_count_xiaoxiang);
+
     while(!to_filter_node.empty()) {
         // pop nodes from the stack and call filter function of each node
         auto func = to_filter_func.top();

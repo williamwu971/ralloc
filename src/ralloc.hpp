@@ -34,6 +34,7 @@ int RP_init(const char* _id, uint64_t size, int* pre_fault);
 
 /* return 1 if it's dirty, otherwise 0. */
 int RP_recover();
+int RP_recover_xiaoxiang(void** pointers,int pointers_count);
 void RP_close();
 void* RP_malloc(size_t sz);
 void RP_free(void* ptr);

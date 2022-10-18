@@ -96,6 +96,10 @@ int RP_recover(){
     return (int) base_md->restart();
 }
 
+int RP_recover_xiaoxiang(void** pointers,int pointers_count){
+    return (int) base_md->restart_xiaoxiang(pointers,pointers_count);
+}
+
 // we assume RP_close is called by the last exiting thread.
 void RP_close(){
     // Wentao: this is a noop as the real function body is now i ~RallocHolder

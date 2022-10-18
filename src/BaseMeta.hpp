@@ -304,6 +304,9 @@ public:
     std::stack<char*> to_filter_node;
     std::stack<std::function<void(char*,GarbageCollection& gc)>> to_filter_func;
 
+    void** pointers_xiaoxiang= nullptr;
+    int pointers_count_xiaoxiang= 0;
+
     GarbageCollection():marked_blk(){};
 
     void operator() ();
@@ -409,6 +412,22 @@ public:
         bool ret = is_dirty();
         if(ret) {
             GarbageCollection gc;
+            gc();
+        }
+        FLUSHFENCE;
+        // here restart is done, and "dirty" should be set to true until
+        // writeback() is called so that crash will result in a true dirty.
+        set_dirty();
+        return ret;
+    }
+    bool restart_xiaoxiang(void** pointers,int pointers_count){
+        // Restart, setting values and flags to normal
+        // Should be called during restart
+        bool ret = is_dirty();
+        if(ret) {
+            GarbageCollection gc;
+            gc.pointers_xiaoxiang=pointers;
+            gc.pointers_count_xiaoxiang=pointers_count;
             gc();
         }
         FLUSHFENCE;
