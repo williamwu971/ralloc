@@ -777,7 +777,9 @@ void GarbageCollection::operator() () {
 //        printf("\nxiaoxiang: check %p %d\n",pointers_xiaoxiang,pointers_count_xiaoxiang);
         printf("xiaoxiang inserting pointers...");
         for (int xx=0;xx<pointers_count_xiaoxiang;xx++){
-            mark_func(pointers_xiaoxiang[xx]);
+            if (pointers_xiaoxiang[xx]!=NULL){
+                mark_func(pointers_xiaoxiang[xx]);
+            }
         }
     }
 
