@@ -76,12 +76,17 @@ void pre_fault_map(void **addr_ptr, const char *path, size_t len, int *pre_fault
         printf(" faulting...");
         int value = *pre_fault;
 
-        memset(map, value, len);
+//        memset(map, value, len);
+
+        size_t PAGE_SIZE = sysconf(_SC_PAGESIZE);
+        for (size_t i = 0; i < mapped_len; i += PAGE_SIZE) {
+            ((char *) map)[i] = value;
+        }
     }
 
     printf("\n");
 
-    *addr_ptr = (void *) map;
+    *addr_ptr = map;
 }
 
 //mmap file
