@@ -96,11 +96,13 @@ int RP_init(const char* _id, uint64_t size, int* pre_fault){
  * start xiaoxiang scan recovery feature
  */
 
-pthread_t RP_scan_lock = PTHREAD_MUTEX_INITIALIZER;
+pthread_t RP_scan_lock;
 Descriptor* RP_scan_current=NULL;
 
 
 void RP_scan_init(){
+
+    pthread_mutex_init(&RP_scan_lock,NULL);
     RP_scan_current = reinterpret_cast<Descriptor*>(_rgs->lookup(DESC_IDX));
 }
 
