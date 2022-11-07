@@ -32,6 +32,11 @@ void* RP_get_root_c(uint64_t i);
 int RP_init(const char* _id, uint64_t size, int* pre_fault);
 #endif
 
+
+// XIAOXIANG: scan superblocks for recovery
+void RP_scan(int (*is_valid)(void*),void (*func)(void*));
+
+
 /* return 1 if it's dirty, otherwise 0. */
 int RP_recover();
 int RP_recover_xiaoxiang(void** pointers,int pointers_count);

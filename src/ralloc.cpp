@@ -92,6 +92,19 @@ int RP_init(const char* _id, uint64_t size, int* pre_fault){
     return _holder.init_ret_val;
 }
 
+void RP_scan(int (*is_valid)(void*),void (*func)(void*)){
+    Descriptor* ret = reinterpret_cast<Descriptor*>(_rgs->lookup(DESC_IDX));
+    int idx=0;
+
+    while (_rgs->in_range(DESC_IDX,ret)){
+        if (_rgs->in_range(SB_IDX,ret->superblock)){
+            printf("%d superblock: %p block_size: %d\n",idx,ret->superblock,ret->block_size);
+        }
+        ret++;
+        idx++;
+    }
+}
+
 int RP_recover(){
     return (int) base_md->restart();
 }
