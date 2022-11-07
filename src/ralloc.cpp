@@ -98,76 +98,46 @@ int RP_init(const char* _id, uint64_t size, int* pre_fault){
 
 pthread_t RP_scan_lock = PTHREAD_MUTEX_INITIALIZER;
 Descriptor* RP_scan_current=NULL;
-int (*RP_scan_is_valid)(void*);
-void (*RP_scan_func)(void*);
 
-void* RP_scan_thread(void* raw){
 
-    (void)raw;
+void RP_scan_init(){
+    RP_scan_current = reinterpret_cast<Descriptor*>(_rgs->lookup(DESC_IDX));
+}
+
+struct RP_scan_pack RP_scan_next(){
+
     Descriptor* ret;
 
-    uint64_t valid = 0;
+    pthread_mutex_lock(&RP_scan_lock);
 
     while (1){
 
-        pthread_mutex_lock(&RP_scan_lock);
-        ret = RP_scan_current;
-        RP_scan_current++;
-        pthread_mutex_unlock(&RP_scan_lock);
+        ret=NULL;
 
-        if (!_rgs->in_range(DESC_IDX,ret)){
+        if (!_rgs->in_range(DESC_IDX,RP_scan_current)){
             break;
         }
 
-        char* curr = (char*)(ret->superblock);
-        if (!_rgs->in_range(SB_IDX,ret->superblock)){
-            continue;
+        ret = RP_scan_current;
+        RP_scan_current++;
+
+        if (_rgs->in_range(SB_IDX,ret->superblock)){
+            break;
         }
-
-        char* end = curr+ret->maxcount*ret->block_size;
-
-        while (curr<end){
-            if (RP_scan_is_valid(curr)){
-                valid++;
-            }
-            curr+=ret->block_size;
-        }
-
-    }
-    printf("valid: %lu\n",valid);
-
-    return NULL;
-}
-
-void RP_scan(int (*is_valid)(void*),void (*func)(void*),int num_thread){
-
-    assert(is_valid);
-    assert(func);
-
-
-    RP_scan_current = reinterpret_cast<Descriptor*>(_rgs->lookup(DESC_IDX));
-    RP_scan_is_valid = is_valid;
-    RP_scan_func=func;
-
-    pthread_t *threads=malloc(num_thread*sizeof(pthread_t));
-
-    for (int i=0;i<num_thread;i++){
-        cpu_set_t cpu;
-        CPU_ZERO(&cpu);
-
-        // reserving CPU 0
-        CPU_SET(i + 1, &cpu);
-
-        pthread_attr_t attr;
-        pthread_attr_init(&attr);
-        pthread_attr_setaffinity_np(&attr, sizeof(cpu_set_t), &cpu);
-
-        pthread_create(threads+i,&attr,RP_scan_thread,NULL);
-    }
-    for (int i=0;i<num_thread;i++){
-        pthread_join(threads[i],NULL);
     }
 
+    pthread_mutex_unlock(&RP_scan_lock);
+
+    struct RP_scan_pack pack;
+    memset(&pack,0,sizeof(struct RP_scan_pack));
+
+    if (ret!=NULL){
+        pack.block_size=ret->block_size;
+        pack.curr=ret->superblock;
+        pack.end = pack.base + ret->maxcount * ret->block_size
+    }
+
+    return pack;
 }
 
 /**

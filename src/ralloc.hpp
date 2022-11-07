@@ -34,7 +34,13 @@ int RP_init(const char* _id, uint64_t size, int* pre_fault);
 
 
 // XIAOXIANG: scan superblocks for recovery
-void RP_scan(int (*is_valid)(void*),void (*func)(void*),int num_thread);
+struct RP_scan_pack{
+    char* curr;
+    uint32_t block_size;
+    char* end;
+};
+void RP_scan_init();
+struct RP_scan_pack RP_scan_next();
 
 
 /* return 1 if it's dirty, otherwise 0. */
