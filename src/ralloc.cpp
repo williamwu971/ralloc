@@ -98,7 +98,7 @@ void RP_scan(int (*is_valid)(void*),void (*func)(void*)){
 
     while (_rgs->in_range(DESC_IDX,ret)){
         if (_rgs->in_range(SB_IDX,ret->superblock)){
-            printf("%d superblock: %p block_size: %d\n",idx,ret->superblock,ret->block_size);
+            printf("%d superblock: %p block_size: %d\n",idx,(void*)ret->superblock,ret->block_size);
         }
         ret++;
         idx++;
