@@ -136,7 +136,7 @@ struct RP_scan_pack RP_scan_next(){
     if (ret!=NULL){
         pack.block_size=ret->block_size;
         pack.curr=ret->superblock;
-        pack.end = pack.base + ret->maxcount * ret->block_size
+        pack.end = pack.curr + ret->maxcount * ret->block_size
     }
 
     return pack;
