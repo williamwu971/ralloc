@@ -92,18 +92,75 @@ int RP_init(const char* _id, uint64_t size, int* pre_fault){
     return _holder.init_ret_val;
 }
 
-void RP_scan(int (*is_valid)(void*),void (*func)(void*)){
-    Descriptor* ret = reinterpret_cast<Descriptor*>(_rgs->lookup(DESC_IDX));
-    int idx=0;
+/**
+ * start xiaoxiang scan recovery feature
+ */
 
-    while (_rgs->in_range(DESC_IDX,ret)){
-        if (_rgs->in_range(SB_IDX,ret->superblock)){
-            printf("%d superblock: %p block_size: %d\n",idx,(void*)ret->superblock,ret->block_size);
+pthread_t RP_scan_lock = PTHREAD_MUTEX_INITIALIZER;
+Descriptor* RP_scan_current=NULL;
+int (*RP_scan_is_valid)(void*);
+void (*RP_scan_func)(void*);
+
+void* RP_scan_thread(void* raw){
+
+    (void)raw;
+    Descriptor* ret;
+
+    uint64_t valid = 0;
+
+    while (1){
+
+        pthread_mutex_lock(&RP_scan_lock);
+        ret = RP_scan_current;
+        RP_scan_current++;
+        pthread_mutex_unlock(&RP_scan_lock);
+
+        if (!_rgs->in_range(DESC_IDX,ret)){
+            break;
         }
-        ret++;
-        idx++;
+
+        char* curr = (char*)(ret->superblock);
+        if (!_rgs->in_range(SB_IDX,ret->superblock)){
+            continue;
+        }
+
+        char* end = curr+ret->maxcount*ret->block_size;
+
+        while (curr<end){
+            if (RP_scan_is_valid(curr)){
+                valid++;
+            }
+            curr+=ret->block_size;
+        }
+
     }
+    printf("valid: %lu\n",valid);
+
+    return NULL;
 }
+
+void RP_scan(int (*is_valid)(void*),void (*func)(void*),int num_thread){
+    RP_scan_current = reinterpret_cast<Descriptor*>(_rgs->lookup(DESC_IDX));
+    RP_scan_is_valid = is_valid;
+    RP_scan_func=func;
+
+    pthread_t *threads=malloc(num_thread*sizeof(pthread_t));
+
+    for (int i=0;i<num_thread;i++){
+        pthread_create(threads+i,NULL,RP_scan_thread,NULL);
+    }
+    for (int i=0;i<num_thread;i++){
+        pthread_join(threads[i],NULL);
+    }
+
+}
+
+/**
+ * end xiaoxiang scan recovery feature
+ *
+ */
+
+
 
 int RP_recover(){
     return (int) base_md->restart();
