@@ -140,6 +140,11 @@ void* RP_scan_thread(void* raw){
 }
 
 void RP_scan(int (*is_valid)(void*),void (*func)(void*),int num_thread){
+
+    assert(is_valid);
+    assert(func);
+
+
     RP_scan_current = reinterpret_cast<Descriptor*>(_rgs->lookup(DESC_IDX));
     RP_scan_is_valid = is_valid;
     RP_scan_func=func;
