@@ -46,6 +46,10 @@ struct RP_scan_pack RP_scan_next();
 /* return 1 if it's dirty, otherwise 0. */
 int RP_recover();
 int RP_recover_xiaoxiang(void** pointers,int pointers_count);
+
+void RP_recover_xiaoxiang_insert(void* ptr);
+int RP_recover_xiaoxiang_go();
+
 void RP_close();
 void* RP_malloc(size_t sz);
 void RP_free(void* ptr);

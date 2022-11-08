@@ -322,6 +322,20 @@ public:
             return;
         }
 
+        /**
+         * start xiaoxiang optimized version
+         */
+
+
+        // Step 2: mark potential pptr
+        marked_blk.insert(reinterpret_cast<char*>(addr));
+        return;
+
+
+        /**
+         * end
+         */
+
         auto res = marked_blk.find(reinterpret_cast<char*>(addr));
         if(res == marked_blk.end()){
             // Step 2: mark potential pptr
@@ -359,6 +373,12 @@ namespace ralloc{
  */
 class BaseMeta {
 public:
+
+    /**
+     * xiaoxiang cache gc
+     */
+    GarbageCollection xiaoxiang_gc;
+
     // unused small sb
     RP_TRANSIENT AtomicCrossPtrCnt<Descriptor, DESC_IDX> avail_sb;
     RP_PERSIST pthread_mutexattr_t dirty_attr;
@@ -440,6 +460,21 @@ public:
         set_dirty();
         return ret;
     }
+
+    void restart_xiaoxiang_insert(void* ptr){
+        xiaoxiang_gc.mark_func(ptr);
+    }
+
+    bool restart_xiaoxiang_go(){
+        bool ret = is_dirty();
+        if(ret) {
+            xiaoxiang_gc();
+        }
+        FLUSHFENCE;
+        set_dirty();
+        return ret;
+    }
+
     void writeback(){
         // Give back tcached blocks *Wentao: no actually ~TCache will do this*
         // Should be called during normal exit
