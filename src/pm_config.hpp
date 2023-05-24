@@ -93,7 +93,7 @@ const int MAX_SZ = ((1 << 13) + (1 << 11) * 3);
 const uint64_t SBSIZE = (4194304); // size of a superblock 64K
 const uint64_t DESCSIZE = CACHELINE_SIZE;
 //const int SB_SHIFT = 16; // assume size of a superblock is 64K
-const int SB_SHIFT = 21; // assume size of a superblock is 64K
+const int SB_SHIFT = 22; // assume size of a superblock is 64K
 const int DESC_SHIFT = 6; // assume size of a descriptor is 64B
 
 
