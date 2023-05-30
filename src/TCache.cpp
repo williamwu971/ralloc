@@ -16,12 +16,38 @@
 using namespace ralloc;
 thread_local TCaches ralloc::t_caches;
 
+#include <x86intrin.h>
+
+inline
+uint64_t readTSC(int front, int back) {
+    if (front)_mm_mfence();
+    uint64_t tsc = __rdtsc();
+    if (back)_mm_mfence();
+    return tsc;
+}
+
 void TCacheBin::push_block(char* block)
 {
+    uint64_t a,b,c;
+
+    a= readTSC(1,1);
+
 	// block has at least sizeof(char*)
 	*(pptr<char>*)block = _block;
+
+    b= readTSC(1,1);
+
 	_block = block;
 	_block_num++;
+
+    c= readTSC(1,1);
+
+    static int times=0;
+
+    if (times++%1000==0){
+        times=0;
+        printf("tc a-b %lu b-c %lu\n",b-a,c-b);
+    }
 }
 
 void TCacheBin::push_list(char* block, uint32_t length)

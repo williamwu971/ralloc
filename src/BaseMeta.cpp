@@ -708,17 +708,6 @@ void* BaseMeta::do_malloc(size_t size){
 }
 
 
-#include <x86intrin.h>
-
-inline
-uint64_t readTSC(int front, int back) {
-    if (front)_mm_mfence();
-    uint64_t tsc = __rdtsc();
-    if (back)_mm_mfence();
-    return tsc;
-}
-
-
 void BaseMeta::do_free(void* ptr){
 
     if(ptr==nullptr) return;
@@ -741,26 +730,12 @@ void BaseMeta::do_free(void* ptr){
     TCacheBin* cache = &t_caches.t_cache[sc_idx];
     SizeClassData* sc = get_sizeclass_by_idx(sc_idx);
 
-    uint64_t a,b,c;
-
-    a= readTSC(1,1);
 
     // flush cache if need
     if (UNLIKELY(cache->get_block_num() >= sc->cache_block_num))
         flush_cache(sc_idx, cache);
 
-    b= readTSC(1,1);
-
     cache->push_block((char*)ptr);
-
-    c= readTSC(1,1);
-
-    static int times=0;
-
-    if (times++%1000==0){
-        times=0;
-        printf("a-b %lu b-c %lu\n",b-a,c-b);
-    }
 }
 
 
