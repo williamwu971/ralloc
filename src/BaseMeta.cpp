@@ -738,18 +738,18 @@ void BaseMeta::do_free(void* ptr){
         return;
     }
 
+    TCacheBin* cache = &t_caches.t_cache[sc_idx];
+    SizeClassData* sc = get_sizeclass_by_idx(sc_idx);
+
     uint64_t a,b,c;
 
     a= readTSC(1,1);
 
-    TCacheBin* cache = &t_caches.t_cache[sc_idx];
-    SizeClassData* sc = get_sizeclass_by_idx(sc_idx);
-
-    b= readTSC(1,1);
-
     // flush cache if need
     if (UNLIKELY(cache->get_block_num() >= sc->cache_block_num))
         flush_cache(sc_idx, cache);
+
+    b= readTSC(1,1);
 
     cache->push_block((char*)ptr);
 
