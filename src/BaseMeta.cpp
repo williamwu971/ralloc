@@ -759,7 +759,7 @@ void BaseMeta::do_free(void* ptr){
 
     if (times++%1000==0){
         times=0;
-        printf("a-b %lu b-c %lu\n",b-a,c-b);
+        printf("BM a-b %lu b-c %lu\n",b-a,c-b);
     }
 }
 
