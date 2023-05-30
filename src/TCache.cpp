@@ -19,8 +19,8 @@ thread_local TCaches ralloc::t_caches;
 void TCacheBin::push_block(char* block)
 {
 	// block has at least sizeof(char*)
-//	*(pptr<char>*)block = _block;
-    *(char**)block = _block;
+	*(pptr<char>*)block = _block;
+//    *(char**)block = _block;
 
 	_block = block;
 	_block_num++;
