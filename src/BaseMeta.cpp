@@ -721,10 +721,6 @@ uint64_t readTSC(int front, int back) {
 
 void BaseMeta::do_free(void* ptr){
 
-    uint64_t a,b,c;
-
-    a= readTSC(1,1);
-
     if(ptr==nullptr) return;
     assert(_rgs->in_range(SB_IDX,ptr));
     Descriptor* desc = desc_lookup(ptr);
@@ -742,10 +738,14 @@ void BaseMeta::do_free(void* ptr){
         return;
     }
 
-    b= readTSC(1,1);
+    uint64_t a,b,c;
+
+    a= readTSC(1,1);
 
     TCacheBin* cache = &t_caches.t_cache[sc_idx];
     SizeClassData* sc = get_sizeclass_by_idx(sc_idx);
+
+    b= readTSC(1,1);
 
     // flush cache if need
     if (UNLIKELY(cache->get_block_num() >= sc->cache_block_num))
