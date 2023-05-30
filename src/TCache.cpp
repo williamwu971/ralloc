@@ -37,7 +37,7 @@ void TCacheBin::push_block(char* block)
 	// block has at least sizeof(char*)
 //	*(pptr<char>*)block = _block;
 //    *((char**)block)=_block;
-    char* ptr = nullptr;
+    char* ptr = _block;
     *(pptr<char>*)ptr= _block;
 //    pmem_memcpy_persist(block,&ptr,sizeof(char*));
     memcpy(block,&ptr,sizeof(char*));
