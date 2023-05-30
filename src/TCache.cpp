@@ -33,7 +33,8 @@ void TCacheBin::push_block(char* block)
     a= readTSC(1,1);
 
 	// block has at least sizeof(char*)
-	*(pptr<char>*)block = _block;
+//	*(pptr<char>*)block = _block;
+    pmem_memcpy_persist(block,&_block,sizeof(char*));
 
     b= readTSC(1,1);
 
