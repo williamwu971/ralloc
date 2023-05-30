@@ -46,7 +46,7 @@ void TCacheBin::push_block(char* block)
 
     if (times++%1000==0){
         times=0;
-        printf("tc a-b %lu b-c %lu\n",b-a,c-b);
+//        printf("tc a-b %lu b-c %lu\n",b-a,c-b);
     }
 }
 
