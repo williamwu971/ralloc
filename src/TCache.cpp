@@ -26,6 +26,7 @@ uint64_t readTSC(int front, int back) {
     return tsc;
 }
 #include <libpmem.h>
+#include <cstring>
 
 void TCacheBin::push_block(char* block)
 {
